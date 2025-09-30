@@ -3,3 +3,5 @@
 project
 target
 .vscode
+.scalafmt.conf
+ChiselCheckers.sv
