@@ -13,6 +13,15 @@ class ChiselCheckers(n: Int) extends Module {
 
   val board = RegInit(VecInit(Seq.fill(board_size)(sEmpty)))
 
+  // Set up initial board state
+  for (i <- 0 until 12) {
+    board(i) := sBlack
+  }
+  for (i <- 20 until 32) {
+    board(i) := sWhite
+  }
+
+  // Add logic here to check if a move is valid
   io.isMoveValid := false.B
 }
 
