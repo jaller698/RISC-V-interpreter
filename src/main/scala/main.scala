@@ -4,56 +4,33 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import CheckerRules._
 class ChiselCheckers(n: Int) extends Module {
+  //i dont use this at all, but i also dont know what to use it for XD
+  //Maybe someone smart knows what purpose this serves, i think its mainly tests right?
   val io = IO(new Bundle {
     val from = Input(UInt(n.W)) // A numbered place on the board (default 1-32)
     val to = Input(UInt(n.W)) // A numbered place on the board (default 1-32)
     val reset = Input(Bool())
     val isMoveValid = Output(Bool())
   })
-
-  private def initialBoard: Vector[Piece] =
-    Vector.tabulate(32) { i =>
-      if (i < 12) Black
-      else if (i >= 20) White
-      else Empty
-    }
-
-  val board = initialBoard
-
-  def printBoard() = {
-    for (i <- 0 until 8) {
-      for (y <- 0 until 4) {
-        val tmp = board(y + (4 * i))
-        tmp match {
-          case White     => print("W")
-          case Black     => print("B")
-          case WhiteKing => print("7")
-          case BlackKing => print("8")
-          case Empty     => print(" ")
-        }
-
-      }
-      print("\n")
-    }
-
-  }
-  printBoard()
-  /*
-  val sEmpty :: sWhite :: sWhiteKing :: sBlack :: sBlackKing :: Nil = Enum(5)
-  val board_size = 32
-
-  val board = RegInit(VecInit(Seq.fill(board_size)(sEmpty)))
-
-  // Set up initial board state
-  for (i <- 0 until 12) {
-    board(i) := sBlack
-  }
-  for (i <- 20 until 32) {
-    board(i) := sWhite
-  }*/
-
   // Add logic here to check if a move is valid
   io.isMoveValid := false.B
+  
+  //Actual code starts here
+  var board = initialBoard
+
+  printBoard(board)
+
+  //important note, the valid move logic is 0 indexed, while the numbered boards we look at are 1 indexed
+  //so you need to -1 the numbers you are looking at on a numbered board
+  board=movePiece(8, 12, board)
+  board=movePiece(9, 13, board)
+  board=movePiece(20, 16, board)
+
+
+  printBoard(board)
+
+
+
 }
 
 object ChiselCheckers extends App {
